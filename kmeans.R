@@ -18,7 +18,7 @@ fun.clusters.init <- function (k, data) {
     data[index, ]
 }
 
-fun.clusters.draw <- function (i, data, clusters, centers) {
+fun.clusters.draw <- function (i, data, clusters, centers, filename) {
     data.clustered <- data.frame(X = data[,1], Y = data[,2], Cluster = factor(clusters))
 
     centers.df <- as.data.frame(centers)
@@ -27,7 +27,7 @@ fun.clusters.draw <- function (i, data, clusters, centers) {
     p <- ggplot(data.clustered, aes(x = X, y = Y)) +
         geom_point(aes(color = Cluster), size = 1) + 
             geom_point(aes(x = X, y = Y), data = centers.df, color = 'red', size = 2)
-    ggsave(p, file = sprintf('images/graph-%02d.png', i), width = 6, height = 6)
+    ggsave(p, file = sprintf('out/%s-%02d.png', filename, i), width = 6, height = 6)
 }    
 
 fun.is.converge <- function (c1, c2) {
@@ -50,10 +50,10 @@ my.kmeans.step <- function (k, data, clusters, centers) {
     list(Clusters = clusters, Centers = centers)
 }
 
-my.kmeans <- function (k, data, max_trial = 20, graph = FALSE) {
+my.kmeans <- function (k, data, max_trial = 20, graph = FALSE, filename = 'graph') {
 
     cluster <- my.kmeans.init(k, data)
-    if (graph) { with(cluster, { fun.clusters.draw(0, data, Clusters, Centers) }) }
+    if (graph) { with(cluster, { fun.clusters.draw(0, data, Clusters, Centers, filename) }) }
 
     i <- 1
     repeat {
@@ -61,7 +61,7 @@ my.kmeans <- function (k, data, max_trial = 20, graph = FALSE) {
         cluster.old <- cluster
         cluster <- with(cluster, my.kmeans.step(k, data, Clusters, Centers))
 
-        if (graph) { with(cluster, { fun.clusters.draw(i, data, Clusters, Centers) }) }
+        if (graph) { with(cluster, { fun.clusters.draw(i, data, Clusters, Centers, filename) }) }
 
         if (i == max_trial || fun.is.converge(cluster.old, cluster)) { break }
 

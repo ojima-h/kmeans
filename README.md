@@ -23,3 +23,16 @@ kmeans を実装してみた。
 
 ### Step 6
 ![step 6](images/graph-06.png)
+
+
+
+kmeans が上手くいかない場合
+------
+
+### 小さい塊が近くにある場合
+
+![fail-1](images/fail-1.png)
+
+### 囲まれてる場合
+
+![fail-2](images/fail-2.png)
